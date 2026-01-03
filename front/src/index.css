@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  font-family: "JetBrains Mono", monospace;
+}
+
+
+@keyframes rainbow {
+  0% { color: #ff0000; }
+  14% { color: #eaff00; }
+  28% { color: #00ff40; }
+  42% { color: #00d0ff; }
+  57% { color: #6a00ff; }
+  71% { color: #ff0090; }
+  85% { color: #ff8400; }
+  100% { color: #ff0000; }
+}
+
+.rainbow-char {
+  animation: rainbow 1s linear infinite;
+}

@@ -1,6 +1,5 @@
 import { asciiArt } from "./Ascii";
 
-// Helper for help items
 const HelpItem = ({ cmd, desc }) => (
   <div className="flex gap-4">
     <span className="text-yellow-400 min-w-[100px]">{cmd}</span>
@@ -8,14 +7,12 @@ const HelpItem = ({ cmd, desc }) => (
   </div>
 );
 
-// We added 'themeStyle' as the second argument
 export function runCommand(input, themeStyle = "") {
   const cmd = input.trim().toLowerCase();
 
   switch (cmd) {
     case "welcome":
       return [
-        // Apply themeStyle to the Cow
         <div key="art" className={`mb-4 font-bold ${themeStyle}`}>
           {asciiArt}
         </div>,

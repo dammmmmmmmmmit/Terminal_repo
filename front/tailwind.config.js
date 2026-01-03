@@ -6,9 +6,13 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        mono: ['"VT323"', 'monospace'],
+      },       
       animation: {
-        'text-gradient': 'text-gradient 1.5s linear infinite', // Sped up for "hacker" feel
+        'text-gradient': 'text-gradient 1.5s linear infinite', 
       },
+      
       keyframes: {
         'text-gradient': {
           '0%': { backgroundPosition: '0% center' },

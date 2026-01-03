@@ -11,10 +11,9 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-gray-100 font-mono retro-text-glow selection:bg-green-500/30">
+    
+    <div className="min-h-screen bg-black text-gray-100 font-mono selection:bg-green-500/30">
       
-      <div className="crt-overlay"></div>
-
       {loading ? <Loader /> : <Terminal />}
     </div>
   );

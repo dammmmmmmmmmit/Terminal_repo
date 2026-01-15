@@ -1,4 +1,5 @@
 import { asciiArt } from "./Ascii";
+import LocationFetcher from "./LocationFetcher";
 
 const HelpItem = ({ cmd, desc }) => (
   <div className="flex gap-4">
@@ -59,6 +60,11 @@ export function runCommand(input, themeStyle = "") {
         <br />
         ];
 
+    case "education":
+        return [
+        <div key="education" className="text-pink-500">bro is uneducated!</div>, 
+        <br />
+        ];
 
     case "whoami":
       return [

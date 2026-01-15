@@ -75,7 +75,7 @@ export default function LocationFetcher() {
            </span>
            <br />
            <span className="text-red-400 max-w-md block"> 
-                >> {location.fullAddress}
+            >> {location.fullAddress}
            </span>
         </div>
       )}

@@ -45,8 +45,8 @@ export default function AboutPanel({ onClose }) {
             </div>
             <div className="italic opacity-70 mb-1"><a href="https://thehive.ai/"/>hive.ai</div>
             <ul className="list-disc pl-5 space-y-1 opacity-80">
-              <li>Engineered scalable frontend architecture using React.js.</li>
-              <li>Optimized database queries reducing load times by 40%.</li>
+              <li>-------</li>
+              <li>-------</li>
             </ul>
           </div>
 
@@ -56,7 +56,7 @@ export default function AboutPanel({ onClose }) {
               <span>2023 - 2024</span>
             </div>
             <ul className="list-disc pl-5 space-y-1 opacity-80">
-              <li>yet to come</li>
+              <li>---------</li>
             </ul>
           </div>
         </div>

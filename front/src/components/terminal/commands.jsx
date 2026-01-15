@@ -35,6 +35,7 @@ export function runCommand(input, themeStyle = "") {
         <HelpItem key="projects" cmd="projects" desc="View my projects" />,
         <HelpItem key="skills" cmd="skills" desc="Technical skills" />,
         <HelpItem key="whoami" cmd="whoami" desc="Current user" />,
+        <HelpItem key="whereami" cmd="whereami" desc="Current location" />, 
         <div key="spacer" className="mb-4"></div>,
       ];
 
@@ -63,6 +64,11 @@ export function runCommand(input, themeStyle = "") {
       return [
         <div key="who" className="text-pink-500">visitor-user</div>, 
         <br />
+      ];
+
+    case "whereami":
+      return[
+          <LocationFetcher key={Date.now()} />
       ];
       
     case "projects": 

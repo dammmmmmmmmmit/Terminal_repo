@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { playKeystroke } from "../../utils/sound"; 
 
 export default function Prompt({ onCommand, inputRef }) {
   const { mode, getTextStyle, customColor } = useTheme();
@@ -15,7 +16,6 @@ export default function Prompt({ onCommand, inputRef }) {
     onCommand(input);
     setInput("");
   };
-
   
   const promptClass = mode === 'rainbow' ? getTextStyle() : '';
   const promptStyle = mode === 'custom' ? { color: customColor } : {};
@@ -29,7 +29,12 @@ export default function Prompt({ onCommand, inputRef }) {
         ref={inputRef}
         type="text"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        
+        onChange={(e) => {
+          setInput(e.target.value);
+          playKeystroke(); 
+        }}
+        
         className="bg-transparent border-none outline-none text-gray-100 flex-1 font-mono"
         autoComplete="off"
         autoFocus

@@ -1,8 +1,8 @@
 export const asciiArt = `
- _________________________________________
-/ You have Egyptian flu: you're going to  \\
-\\ be a mummy.                            /
- _________________________________________
+ ________________________________
+/ Welcome! You have Egyptian flu:\\
+\\ you're going to be a mummy.   /
+ ________________________________
         \\   ^__^
          \\  (oo)\\_______
             (__)\\       )\\/\\

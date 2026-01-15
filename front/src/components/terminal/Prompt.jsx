@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { useTheme } from "../../context/ThemeContext";
 import { playKeystroke } from "../../utils/sound"; 
 
 export default function Prompt({ onCommand, inputRef }) {
-  const { mode, getTextStyle, customColor } = useTheme();
   const [input, setInput] = useState("");
 
   useEffect(() => {
@@ -16,26 +14,21 @@ export default function Prompt({ onCommand, inputRef }) {
     onCommand(input);
     setInput("");
   };
-  
-  const promptClass = mode === 'rainbow' ? getTextStyle() : '';
-  const promptStyle = mode === 'custom' ? { color: customColor } : {};
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-row items-center mt-2">
-      <span className={`mr-2 ${promptClass}`} style={promptStyle}>
+      <span className="mr-2 shrink-0 opacity-80">
         User@terminal.dammmmmmmmmmit:~$
       </span>
       <input
         ref={inputRef}
         type="text"
         value={input}
-        
         onChange={(e) => {
           setInput(e.target.value);
-          playKeystroke(); 
+          playKeystroke();
         }}
-        
-        className="bg-transparent border-none outline-none text-gray-100 flex-1 font-mono"
+        className="flex-1 bg-transparent border-none outline-none w-full min-w-0 font-mono font-bold"
         autoComplete="off"
         autoFocus
       />

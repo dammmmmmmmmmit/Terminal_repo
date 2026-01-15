@@ -1,16 +1,39 @@
-// A short, crisp mechanical keyboard click sound (Base64 encoded)
-const keyPressSound = "data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="; // (This is a placeholder, see note below)
+const CURRENT_PROFILE = 1; 
+const BOOT_SOUND_URL = "/sounds/nostromo-boot.mp3";
 
-// REAL DATA: I will give you a real, working click sound below.
-// This function handles the "rapid fire" typing without lag
+const SOUND_PROFILES = {
+  1: "https://assets.mixkit.co/active_storage/sfx/2580/2580-preview.mp3", 
+  2: "https://assets.mixkit.co/active_storage/sfx/2409/2409-preview.mp3", 
+  3: "https://assets.mixkit.co/active_storage/sfx/2386/2386-preview.mp3",
+    4: "https://assets.mixkit.co/active_storage/sfx/888/888-preview.mp3", 
+};
+
 export const playKeystroke = () => {
   try {
-    // We create a new Audio object for every keypress to allow overlapping sounds
-    // (So fast typing sounds natural)
-    const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3"); 
-    audio.volume = 0.3; // Keep it subtle (30% volume)
-    audio.play();
+    const audio = new Audio(SOUND_PROFILES[CURRENT_PROFILE]);
+    
+    
+    if (CURRENT_PROFILE === 1) audio.volume = 0.5;
+    if (CURRENT_PROFILE === 2) audio.volume = 0.25; 
+    if (CURRENT_PROFILE === 3) audio.volume = 0.4;
+    
+        if (CURRENT_PROFILE === 4) {
+        audio.volume = 0.2; 
+        audio.playbackRate = 3;     }
+    
+    
+    audio.play().catch(e => console.error("Audio blocked:", e));
   } catch (err) {
     console.error("Audio play failed", err);
+  }
+};
+
+export const playBootSound = () => {
+  try {
+    const audio = new Audio(BOOT_SOUND_URL);
+    audio.volume = 0.5;
+    audio.play().catch(e => console.error("Boot sound blocked:", e));
+  } catch (err) {
+    console.error("Boot sound failed", err);
   }
 };

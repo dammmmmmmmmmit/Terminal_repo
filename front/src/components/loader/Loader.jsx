@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export default function Loader({ onFinish }) {
-  const text = "booting system...";
+  const text = "stay hungry, stay foolish...";
 
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center">

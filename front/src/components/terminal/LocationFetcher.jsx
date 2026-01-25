@@ -15,14 +15,14 @@ export default function LocationFetcher() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        
+
         try {
           // 📡 Using OpenStreetMap (Nominatim) for street-level details
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
           const data = await res.json();
-          
+
           // Extract specific details
           const address = data.address || {};
           const street = address.road || address.pedestrian || "";
@@ -64,19 +64,19 @@ export default function LocationFetcher() {
     <div className="mb-2">
       <div className="opacity-50 text-xs">[ SAT-LINK ESTABLISHED ]</div>
       <div className="flex gap-4 text-xs opacity-75 mb-2">
-         <span>LAT: {location.lat}</span>
-         <span>LNG: {location.lng}</span>
+        <span>LAT: {location.lat}</span>
+        <span>LNG: {location.lng}</span>
       </div>
-      
+
       {location.fullAddress && (
         <div className="mt-2 border-l-2 border-red-500 pl-3">
-           <span className="text-red-500 font-bold animate-pulse">
-             I know where you live ... 
-           </span>
-           <br />
-           <span className="text-red-400 max-w-md block"> 
-            >> {location.fullAddress}
-           </span>
+          <span className="text-red-500 font-bold animate-pulse">
+            I know where you live ...
+          </span>
+          <br />
+          <span className="text-red-400 max-w-md block">
+            {">>"} {location.fullAddress}
+          </span>
         </div>
       )}
     </div>

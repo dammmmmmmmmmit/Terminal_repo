@@ -3,35 +3,43 @@ import Prompt from "./Prompt.jsx";
 import Output from "./Output.jsx";
 import { runCommand } from "./commands.jsx";
 import { useTheme } from "../../context/ThemeContext";
-import AboutPanel from "./AboutPanel.jsx"; 
+import AboutPanel from "./AboutPanel.jsx";
+import AiChat from "./AiChat"; // <--- Import the Chat Component
 
 export default function Terminal() {
   const { themeColor, setThemeColor } = useTheme();
-  
+
+  // --- STATE ---
   const [history, setHistory] = useState([]);
   const [showConfig, setShowConfig] = useState(false);
-  const [showAbout, setShowAbout] = useState(false); 
-  
+  const [showAbout, setShowAbout] = useState(false);
+  const [showAi, setShowAi] = useState(false); // <--- State for AI Mode
+
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
+  // --- INITIALIZATION ---
   useEffect(() => {
     setHistory(runCommand("welcome"));
   }, []);
 
+  // --- AUTO SCROLL ---
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [history, showAbout]); 
+  }, [history, showAbout, showAi]);
 
+  // --- CLICK TO FOCUS ---
   const handleTerminalClick = () => {
-    if (!showConfig) {
+    if (!showConfig && !showAi) {
       inputRef.current?.focus();
     }
   };
 
+  // --- COMMAND HANDLER ---
   const onCommand = (input) => {
     const trimmedInput = input.trim().toLowerCase();
 
+    // 1. ABOUT COMMAND
     if (trimmedInput === "about") {
       setShowAbout(true);
       setHistory((prev) => [
@@ -45,16 +53,32 @@ export default function Terminal() {
       return;
     }
 
+    // 2. CLEAR COMMAND
     if (trimmedInput === "clear") {
       setHistory([]);
       return;
     }
 
+    // 3. AI CHAT COMMAND
+    if (trimmedInput === "p.ai") {
+      setShowAi(true);
+      setHistory((prev) => [
+        ...prev,
+        <div key={Date.now()} className="mb-2 opacity-80">
+          <span className="mr-2">User@terminal:~$</span>
+          <span>p.ai</span>
+        </div>
+      ]);
+      return;
+    }
+
+    // 4. THEME COMMAND
     if (trimmedInput === "theme" || trimmedInput === "config") {
       setShowConfig(true);
       return;
     }
 
+    // 5. STANDARD COMMANDS
     setHistory((prev) => [
       ...prev,
       <div key={Date.now() + "cmd"} className="mb-2 opacity-80">
@@ -66,34 +90,40 @@ export default function Terminal() {
   };
 
   return (
-    <div 
+    <div
       className="h-screen w-screen bg-black overflow-hidden flex"
       style={{ color: themeColor, textShadow: `0 0 2px ${themeColor}` }}
     >
-      
+
       {/* --- LEFT SIDE: TERMINAL --- */}
-      <div 
+      <div
         onClick={handleTerminalClick}
         className={`h-full p-6 overflow-y-auto no-scrollbar transition-all duration-500 ease-in-out ${showAbout ? 'w-1/2 border-r border-dashed' : 'w-full'}`}
         style={{ borderColor: themeColor }}
       >
         <Output history={history} />
-        
-        {!showConfig && <Prompt onCommand={onCommand} inputRef={inputRef} />}
 
+        {/* --- CONDITIONAL RENDERING: CHAT OR PROMPT --- */}
+        {showAi ? (
+          <AiChat onClose={() => setShowAi(false)} />
+        ) : (
+          !showConfig && <Prompt onCommand={onCommand} inputRef={inputRef} />
+        )}
+
+        {/* --- CONFIG MODAL --- */}
         {showConfig && (
           <div className="mt-4 p-4 border border-gray-700 bg-gray-900/90 rounded max-w-md relative z-50">
             <h3 className="text-lg mb-4 border-b border-gray-700 pb-2 font-bold">Terminal Color Settings</h3>
             <div className="flex items-center gap-4 mb-6">
               <span className="text-gray-400">Select Phosphor Color:</span>
-              <input 
-                type="color" 
+              <input
+                type="color"
                 value={themeColor}
                 onChange={(e) => setThemeColor(e.target.value)}
                 className="h-10 w-20 cursor-pointer bg-transparent border border-gray-600 rounded"
               />
             </div>
-            <button 
+            <button
               onClick={() => { setShowConfig(false); inputRef.current?.focus(); }}
               className="w-full py-2 border rounded hover:bg-white/10"
               style={{ borderColor: themeColor }}
@@ -106,6 +136,7 @@ export default function Terminal() {
         <div ref={bottomRef} />
       </div>
 
+      {/* --- RIGHT SIDE: ABOUT PANEL --- */}
       {showAbout && (
         <div className="w-1/2 h-full p-6 bg-black animate-in fade-in slide-in-from-right">
           <AboutPanel onClose={() => setShowAbout(false)} />

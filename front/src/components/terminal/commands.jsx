@@ -68,12 +68,23 @@ export function runCommand(input, themeStyle = "") {
     case "education":
       return [
         <div key="edu-title" className="mb-2 text-blue-400">Academic Background:</div>,
-        <div key="edu-deg" className="font-bold">Bachelor of Computer Applications</div>,
-        <div key="edu-loc" className="text-gray-500 mb-2">New Delhi, India</div>,
-        <div key="edu-course" className="text-sm opacity-80">
+
+        {/* --- MASTER'S DEGREE --- */ }
+        < div key = "msc-deg" className = "font-bold" > M.Sc.in AI & Machine Learning</div >,
+        <div key="msc-loc" className="text-gray-500 mb-1">Bangalore, India <span className="text-yellow-400 text-xs">(Currently Pursuing)</span></div>,
+        <div key="msc-course" className="text-sm opacity-80 mb-4">
+          Focus Areas: <br />
+          • Statistics & Computational Mathematics<br />
+          • Advanced Machine Learning Concepts<br />
+          • Deep Learning & Neural Networks
+        </div>,
+
+        {/* --- BACHELOR'S DEGREE --- */ }
+        < div key = "bca-deg" className = "font-bold" > Bachelor of Computer Applications</div >,
+        <div key="bca-loc" className="text-gray-500 mb-1">New Delhi, India</div>,
+        <div key="bca-course" className="text-sm opacity-80">
           Relevant Coursework: <br />
           • Data Structures & Algorithms (Java/Python)<br />
-          • Machine Learning & Deep Learning<br />
           • Linear Algebra & Statistics<br />
           • Full Stack Web Development
         </div>,

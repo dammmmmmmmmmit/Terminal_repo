@@ -33,7 +33,7 @@ export function runCommand(input, themeStyle = "") {
         <HelpItem key="education" cmd="education" desc="My education background" />,
         <HelpItem key="email" cmd="email" desc="Send me an email" />,
         <HelpItem key="github" cmd="gui" desc="Go to github" />,
-        <HelpItem key="pai" cmd="p.ai" desc="Access Neural Net (Chatbot) Password: guest@user" />,
+        <HelpItem key="pai" cmd="p.ai" desc="Access Neural Net (Chatbot) Password: guest" />,
         <HelpItem key="projects" cmd="projects" desc="View my projects" />,
         <HelpItem key="skills" cmd="skills" desc="Technical skills" />,
         <HelpItem key="whoami" cmd="whoami" desc="Current user" />,

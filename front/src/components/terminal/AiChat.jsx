@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-// ✅ Ensure this is your correct Worker URL
+// ✅ Your Cloudflare Worker URL
 const API_URL = "https://terminal-ai-backend.aditya122sharma.workers.dev";
 
 export default function AiChat({ onClose }) {
@@ -19,32 +19,40 @@ export default function AiChat({ onClose }) {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [history, stage]);
 
-    // --- HANDLE LOGIN (Admin or Guest) ---
-    const handleLogin = async (e, type) => {
-        if (e) e.preventDefault();
+    // --- HANDLE LOGIN ---
+    const handleLogin = async (e) => {
+        e.preventDefault();
         setLoading(true);
         setError("");
 
-        // If Guest, we send the password "guest" automatically
-        const pwdToSend = type === "guest" ? "guest" : password;
+        // 1. Clean the input (Remove spaces)
+        const cleanPassword = password.trim();
+        const passwordToSend = cleanPassword === "guest" ? "guest@user" : password;
+
+
 
         try {
             const res = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password: pwdToSend, messages: [] })
+                body: JSON.stringify({ password: passwordToSend, messages: [] })
             });
 
             if (res.status === 401) {
                 setError("ACCESS DENIED: INVALID PASSPHRASE");
                 setLoading(false);
             } else {
-                setMode(type === "guest" ? "guest" : "admin");
+                // 2. Strict Check for Guest Mode
+                // We check the CLEANED password. If it is "guest", we force Guest Mode.
+                const isGuest = cleanPassword === "guest";
+                const detectedMode = isGuest ? "guest" : "admin";
+
+                setMode(detectedMode);
                 setStage("chat");
                 setLoading(false);
                 setHistory([
                     {
-                        role: "assistant", content: type === "guest"
+                        role: "assistant", content: detectedMode === "guest"
                             ? "Visitor Access Granted. I can answer questions about Aditya's resume."
                             : "Admin Access Granted. System Unlocked."
                     }
@@ -71,8 +79,8 @@ export default function AiChat({ onClose }) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    // IMPORTANT: We keep sending the password so the backend knows which model to use
-                    password: mode === "guest" ? "guest" : password,
+                    // Send the password state again (trimmed)
+                    password: password.trim(),
                     messages: newHistory.filter(m => m.role !== "assistant")
                 })
             });
@@ -99,13 +107,11 @@ export default function AiChat({ onClose }) {
                     ⚠ CLASSIFIED ACCESS ⚠
                 </div>
 
-                {/* THE EMAIL HINT YOU WANTED */}
                 <div className="mb-6 text-xs text-gray-400 text-center italic opacity-80">
                     {">"} To access Admin AI (Llama-70B), email me for the passphrase.
                 </div>
 
-                <form onSubmit={(e) => handleLogin(e, "admin")} className="flex flex-col gap-4">
-                    {/* Admin Password Input */}
+                <form onSubmit={handleLogin} className="flex flex-col gap-4">
                     <div className="flex items-center gap-2">
                         <span className="text-red-500 font-bold">PASSPHRASE:</span>
                         <input
@@ -119,23 +125,10 @@ export default function AiChat({ onClose }) {
                         />
                     </div>
 
-                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-800">
-                        {/* Hidden submit button so 'Enter' key works for Admin */}
-                        <button type="submit" className="hidden"></button>
+                    {/* Hidden submit button to allow Enter key */}
+                    <button type="submit" className="hidden"></button>
 
-                        <span className="text-xs text-gray-600">OR</span>
-
-                        {/* Guest Button */}
-                        <button
-                            type="button"
-                            onClick={() => handleLogin(null, "guest")}
-                            className="text-xs border border-green-700 text-green-500 px-4 py-2 hover:bg-green-900/30 transition-colors"
-                        >
-                            [ ENTER AS GUEST ]
-                        </button>
-                    </div>
-
-                    {error && <div className="text-red-500 font-bold text-xs animate-pulse text-center mt-2">>> {error}</div>}
+                    {error && <div className="text-red-500 font-bold text-xs animate-pulse text-center mt-2">{">>"} {error}</div>}
                     {loading && <div className="text-gray-500 text-xs text-center mt-2">Authenticating...</div>}
                 </form>
             </div>
@@ -147,8 +140,13 @@ export default function AiChat({ onClose }) {
         <div className={`border p-4 h-96 flex flex-col bg-black/80 mt-4 relative shadow-[0_0_15px_rgba(0,0,0,0.5)] font-mono ${mode === 'admin' ? 'border-green-500/50' : 'border-blue-500/50'}`}>
             {/* Status Bar */}
             <div className="absolute top-2 left-2 text-[10px] opacity-50 uppercase tracking-widest flex gap-2">
-                <span>MODE: {mode === 'admin' ? 'ADMIN' : 'GUEST'}</span>
-                <span>MODEL: {mode === 'admin' ? 'LLAMA-3-70B' : 'LLAMA-3-8B'}</span>
+                <span className={mode === 'admin' ? 'text-green-500' : 'text-blue-500'}>
+                    MODE: {mode === 'admin' ? 'ADMIN' : 'GUEST'}
+                </span>
+                <span className="opacity-50">|</span>
+                <span className={mode === 'admin' ? 'text-green-500' : 'text-blue-500'}>
+                    MODEL: {mode === 'admin' ? 'LLAMA-3-70B' : 'LLAMA-3-8B'}
+                </span>
             </div>
 
             <button
@@ -163,10 +161,10 @@ export default function AiChat({ onClose }) {
                 {history.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] p-2 border-l-2 ${msg.role === 'user'
-                                ? 'border-gray-500 bg-gray-900/10 text-gray-300'
-                                : mode === 'admin'
-                                    ? 'border-green-500 text-green-400'
-                                    : 'border-blue-500 text-blue-400'
+                            ? 'border-gray-500 bg-gray-900/10 text-gray-300'
+                            : mode === 'admin'
+                                ? 'border-green-500 text-green-400'
+                                : 'border-blue-500 text-blue-400'
                             }`}>
                             <span className="font-bold text-[10px] opacity-50 block mb-1 tracking-wider">
                                 {msg.role === 'user' ? '>> USER' : '>> SYSTEM'}

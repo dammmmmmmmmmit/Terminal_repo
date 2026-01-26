@@ -79,8 +79,7 @@ export default function AiChat({ onClose }) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    // Send the password state again (trimmed)
-                    password: password.trim(),
+                    password: (password.trim() === "guest") ? "guest@user" : password.trim(),
                     messages: newHistory.filter(m => m.role !== "assistant")
                 })
             });
